@@ -1,5 +1,5 @@
 
-package br.com.threads;
+package br.com.threads.ex1;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

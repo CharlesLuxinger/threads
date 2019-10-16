@@ -1,4 +1,4 @@
-package br.com.threads;
+package br.com.threads.ex1;
 
 import java.math.BigInteger;
 
