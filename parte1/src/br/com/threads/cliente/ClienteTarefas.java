@@ -1,5 +1,6 @@
 package br.com.threads.cliente;
 
+import java.io.PrintStream;
 import java.net.Socket;
 import java.util.Scanner;
 
@@ -10,10 +11,15 @@ public class ClienteTarefas {
 
 		System.out.println("Connection OK");
 
+		PrintStream stream = new PrintStream(socket.getOutputStream());
+		stream.println("comando1");
+
 		Scanner input = new Scanner(System.in);
 
 		input.nextLine();
 
+		stream.close();
+		input.close();
 		socket.close();
 	}
 }
