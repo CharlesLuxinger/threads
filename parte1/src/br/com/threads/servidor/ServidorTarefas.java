@@ -14,6 +14,10 @@ public class ServidorTarefas {
 		while (true) {
 			Socket socket = server.accept();
 			System.out.println("Accept a new client, port: " + socket.getPort());
+
+			DistribuirTarefas distribuirTarefas = new DistribuirTarefas(socket);
+			Thread threadCliente = new Thread(distribuirTarefas);
+			threadCliente.start();
 		}
 
 	}
