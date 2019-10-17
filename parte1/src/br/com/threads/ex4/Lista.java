@@ -7,6 +7,17 @@ public class Lista {
 	public synchronized void adicionaElementos(String elemento) {
 		elementos[indice] = elemento;
 		indice++;
+
+		try {
+			Thread.sleep(10);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+
+		if (indice == elementos.length) {
+			System.out.println("Lista Cheia!");
+			notify();
+		}
 	}
 
 	public int tamanho() {
