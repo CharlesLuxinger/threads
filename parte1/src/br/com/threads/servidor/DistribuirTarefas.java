@@ -1,14 +1,17 @@
 package br.com.threads.servidor;
 
+import java.io.PrintStream;
 import java.net.Socket;
 import java.util.Scanner;
 
 public class DistribuirTarefas implements Runnable {
 
 	private Socket socket;
+	private ServidorTarefas servidor;
 
-	public DistribuirTarefas(Socket socket) {
+	public DistribuirTarefas(Socket socket, ServidorTarefas servidor) {
 		this.socket = socket;
+		this.servidor = servidor;
 	}
 
 	@Override
@@ -20,12 +23,43 @@ public class DistribuirTarefas implements Runnable {
 		try {
 			Scanner scanner = new Scanner(socket.getInputStream());
 
+			PrintStream responseCliente = new PrintStream(socket.getOutputStream());
+
 
 			while (scanner.hasNextLine()) {
 				String comando = scanner.nextLine();
-				System.out.println(comando);
+
+				switch (comando) {
+				case "c1": {
+					System.out.println("Processando C1");
+					responseCliente.println("Processado C1");
+					break;
+				}
+
+				case "c2": {
+					System.out.println("Processando C2");
+					responseCliente.println("Processado C2");
+					break;
+				}
+
+				case "c3": {
+					System.out.println("Processando C3");
+					responseCliente.println("Processado C3");
+					break;
+				}
+				case "fim": {
+					responseCliente.println("Shutdown Server");
+
+					servidor.shutdown();
+					break;
+				}
+				default:
+					System.out.println("Comando inválido");
+					break;
+				}
 			}
 
+			responseCliente.close();
 			scanner.close();
 		} catch (Exception e) {
 			throw new RuntimeException(e);

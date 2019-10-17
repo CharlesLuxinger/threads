@@ -11,15 +11,64 @@ public class ClienteTarefas {
 
 		System.out.println("Connection OK");
 
-		PrintStream stream = new PrintStream(socket.getOutputStream());
-		stream.println("comando1");
 
-		Scanner input = new Scanner(System.in);
+		Thread threadComando = new Thread(new Runnable() {
 
-		input.nextLine();
+			@Override
+			public void run() {
+				try {
+					System.out.println("Insira comandos:");
+					PrintStream request = new PrintStream(socket.getOutputStream());
 
-		stream.close();
-		input.close();
+					Scanner input = new Scanner(System.in);
+
+					while (input.hasNextLine()) {
+						String line = input.nextLine();
+
+						if (line.trim().equals("")) {
+							break;
+						}
+
+						request.println(line);
+					}
+
+					request.close();
+					input.close();
+				} catch (Exception e) {
+					throw new RuntimeException(e);
+				}
+			}
+		});
+
+
+		Thread threadResposta = new Thread(new Runnable() {
+
+			@Override
+			public void run() {
+				try {
+					System.out.println("Tratando Resposta Servidor");
+
+					Scanner response = new Scanner(socket.getInputStream());
+
+					while (response.hasNextLine()) {
+						String line = response.nextLine();
+
+						System.out.println(line);
+					}
+
+					response.close();
+				} catch (Exception e) {
+					throw new RuntimeException(e);
+				}
+			}
+		});
+
+		threadComando.start();
+		threadResposta.start();
+
+		threadComando.join();
+
+		System.out.println("Fechando conexão!");
 		socket.close();
 	}
 }
