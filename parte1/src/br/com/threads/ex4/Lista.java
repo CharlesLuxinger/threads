@@ -27,4 +27,8 @@ public class Lista {
 	public String pegaElemento(int posicao) {
 		return elementos[posicao];
 	}
+
+	public boolean estaCheia() {
+		return indice == elementos.length;
+	}
 }
