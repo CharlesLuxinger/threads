@@ -1,11 +1,13 @@
 package br.com.threads.ex4;
 
+import java.util.List;
+
 public class TarefaAdicionarElemento implements Runnable {
 
-	private Lista lista;
+	private List<String> lista;
 	private int index;
 
-	public TarefaAdicionarElemento(Lista lista, int index) {
+	public TarefaAdicionarElemento(List<String> lista, int index) {
 		this.index = index;
 		this.lista = lista;
 	}
@@ -13,7 +15,7 @@ public class TarefaAdicionarElemento implements Runnable {
 	@Override
 	public void run() {
 		for (int i = 0; i < 100; i++) {
-			lista.adicionaElementos("Thread " + index + ": " + i);
+			lista.add("Thread " + index + ": " + i);
 		}
 	}
 
