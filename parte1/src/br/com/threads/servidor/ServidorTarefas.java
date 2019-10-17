@@ -25,8 +25,7 @@ public class ServidorTarefas {
 		System.out.println("Starting Server");
 		server = new ServerSocket(1234);
 
-		// Qtd dinâmica, elimina as threads inutilizadas
-		threadPool = Executors.newCachedThreadPool();
+		threadPool = Executors.newFixedThreadPool(4);
 
 		executandoComando = new AtomicBoolean(true);
 	}
@@ -38,7 +37,7 @@ public class ServidorTarefas {
 				Socket socket = server.accept();
 				System.out.println("Accept a new client, port: " + socket.getPort());
 
-				DistribuirTarefas distribuirTarefas = new DistribuirTarefas(socket, this);
+				DistribuirTarefas distribuirTarefas = new DistribuirTarefas(threadPool, socket, this);
 
 				threadPool.execute(distribuirTarefas);
 			} catch (SocketException e) {

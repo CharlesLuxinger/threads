@@ -3,13 +3,19 @@ package br.com.threads.servidor;
 import java.io.PrintStream;
 import java.net.Socket;
 import java.util.Scanner;
+import java.util.concurrent.ExecutorService;
+
+import br.com.threads.comando.ComandoC1;
+import br.com.threads.comando.ComandoC2;
 
 public class DistribuirTarefas implements Runnable {
 
 	private Socket socket;
 	private ServidorTarefas servidor;
+	private ExecutorService threadPool;
 
-	public DistribuirTarefas(Socket socket, ServidorTarefas servidor) {
+	public DistribuirTarefas(ExecutorService threadPool, Socket socket, ServidorTarefas servidor) {
+		this.threadPool = threadPool;
 		this.socket = socket;
 		this.servidor = servidor;
 	}
@@ -31,14 +37,20 @@ public class DistribuirTarefas implements Runnable {
 
 				switch (comando) {
 				case "c1": {
-					System.out.println("Processando C1");
-					responseCliente.println("Processado C1");
+					responseCliente.println("Processando C1");
+
+					ComandoC1 comandoC1 = new ComandoC1(responseCliente);
+
+					threadPool.execute(comandoC1);
 					break;
 				}
 
 				case "c2": {
-					System.out.println("Processando C2");
-					responseCliente.println("Processado C2");
+					responseCliente.println("Processando C2");
+
+					ComandoC2 comandoC2 = new ComandoC2(responseCliente);
+
+					threadPool.execute(comandoC2);
 					break;
 				}
 
