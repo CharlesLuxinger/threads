@@ -9,13 +9,17 @@ public class Main {
 
 		Thread threadRapida2 = new Thread(new TarefaRapida(tarefas), "Tarefa Rapida 2");
 
-		Thread threadLenta3 = new Thread(new TarefaLenta(tarefas), "Tarefa Lenta 3");
+		Thread threadLiberaTarefa = new Thread(new LiberaTarefa(tarefas), "Libera Tarefa");
+		threadLiberaTarefa.setDaemon(true);
 
-		Thread threadRapida4 = new Thread(new TarefaRapida(tarefas), "Tarefa Rapida 4");
+		//Thread threadLenta3 = new Thread(new TarefaLenta(tarefas), "Tarefa Lenta 3");
+
+		//Thread threadRapida4 = new Thread(new TarefaRapida(tarefas), "Tarefa Rapida 4");
 
 		threadLenta1.start();
 		threadRapida2.start();
-		threadLenta3.start();
-		threadRapida4.start();
+		threadLiberaTarefa.start();
+		//threadLenta3.start();
+		//threadRapida4.start();
 	}
 }

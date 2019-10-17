@@ -10,7 +10,7 @@ public class TarefaLenta implements Runnable {
 
 	@Override
 	public void run() {
-		tarefas.tarefaLenta();
+		tarefas.liberaExecucao();
 	}
 
 }
