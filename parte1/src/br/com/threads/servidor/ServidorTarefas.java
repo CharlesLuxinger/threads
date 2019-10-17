@@ -8,6 +8,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import br.com.threads.factory.FabricaThreads;
+
 public class ServidorTarefas {
 
 	private ExecutorService threadPool;
@@ -25,7 +27,7 @@ public class ServidorTarefas {
 		System.out.println("Starting Server");
 		server = new ServerSocket(1234);
 
-		threadPool = Executors.newFixedThreadPool(4);
+		threadPool = Executors.newFixedThreadPool(4, new FabricaThreads());
 
 		executandoComando = new AtomicBoolean(true);
 	}
