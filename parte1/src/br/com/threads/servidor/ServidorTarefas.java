@@ -4,10 +4,13 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import br.com.threads.consumer.TarefaConsumer;
 import br.com.threads.factory.FabricaThreads;
 
 public class ServidorTarefas {
@@ -22,14 +25,20 @@ public class ServidorTarefas {
 	// Substitui volatile
 	private AtomicBoolean executandoComando;
 
+	private BlockingQueue<String> filaComandos;
+
 	public ServidorTarefas() throws IOException {
 
 		System.out.println("Starting Server");
 		server = new ServerSocket(1234);
 
-		threadPool = Executors.newFixedThreadPool(4, new FabricaThreads());
+		threadPool = Executors.newCachedThreadPool(new FabricaThreads());
 
 		executandoComando = new AtomicBoolean(true);
+
+		filaComandos = new ArrayBlockingQueue<String>(2);
+
+		inicializarConsumer();
 	}
 
 
@@ -39,7 +48,7 @@ public class ServidorTarefas {
 				Socket socket = server.accept();
 				System.out.println("Accept a new client, port: " + socket.getPort());
 
-				DistribuirTarefas distribuirTarefas = new DistribuirTarefas(threadPool, socket, this);
+				DistribuirTarefas distribuirTarefas = new DistribuirTarefas(threadPool, socket, this, filaComandos);
 
 				threadPool.execute(distribuirTarefas);
 			} catch (SocketException e) {
@@ -54,4 +63,15 @@ public class ServidorTarefas {
 		threadPool.shutdown();
 	}
 
+	private void inicializarConsumer() {
+
+		int index = 2;
+
+		for (int i = 0; i < index; i++) {
+			TarefaConsumer tarefa = new TarefaConsumer(filaComandos);
+
+			threadPool.execute(tarefa);
+		}
+
+	}
 }
